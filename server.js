@@ -30,23 +30,29 @@ app.post("/api/contact", async (req, res) => {
     return res.status(400).json({ success: false, error: "All fields are required." });
   }
 
-  const gmailPassword = process.env.GMAIL_APP_PASSWORD;
-  if (!gmailPassword) {
-    console.error("GMAIL_APP_PASSWORD is not set");
+  const smtpPassword = process.env.SMTP_PASSWORD;
+  if (!smtpPassword) {
+    console.error("SMTP_PASSWORD is not set");
     return res.status(500).json({ success: false, error: "Email service not configured." });
   }
 
+  const smtpUser = process.env.SMTP_USER || "techtitansai@zohomail.in";
+  const smtpHost = process.env.SMTP_HOST || "smtp.zoho.in";
+  const smtpPort = Number(process.env.SMTP_PORT) || 465;
+
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: smtpHost,
+    port: smtpPort,
+    secure: smtpPort === 465,
     auth: {
-      user: process.env.GMAIL_USER || "gameralipmk@gmail.com",
-      pass: gmailPassword,
+      user: smtpUser,
+      pass: smtpPassword,
     },
   });
 
   const mailOptions = {
-    from: `"TechTitans AI Contact" <${process.env.GMAIL_USER || "gameralipmk@gmail.com"}>`,
-    to: process.env.CONTACT_RECIPIENT || "gameralipmk@gmail.com",
+    from: `"TechTitans AI" <${smtpUser}>`,
+    to: process.env.CONTACT_RECIPIENT || "techtitansai@zohomail.in",
     replyTo: email,
     subject: `New Inquiry: ${service} — from ${name}`,
     html: `
