@@ -7,7 +7,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "build": "cd artifacts/techtitans-ai && npm install && npx vite build --config vite.config.ts && mkdir -p ../../dist && cp -r dist/public/* ../../dist/",
+    "build": "echo 'Frontend is pre-built in dist/ — ready to serve'",
     "start": "node server.js"
   },
   "dependencies": {
