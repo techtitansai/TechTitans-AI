@@ -84,11 +84,13 @@ app.post("/api/contact", async (req, res) => {
   };
 
   try {
+    await transporter.verify();
     await transporter.sendMail(mailOptions);
     console.log(`Contact form email sent from ${name} (${email}) - ${service}`);
     res.json({ success: true, message: "Email sent successfully." });
   } catch (err) {
-    console.error("Failed to send contact form email:", err);
+    console.error("Failed to send contact form email:", err.message || err);
+    console.error("SMTP config used:", { host: smtpHost, port: smtpPort, user: smtpUser });
     res.status(500).json({ success: false, error: "Failed to send email. Please try again." });
   }
 });
